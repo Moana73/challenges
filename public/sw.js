@@ -2,7 +2,7 @@
 // Workbox 等は使わず素の Cache API で書いている（アプリが小さく、
 // キャッシュ戦略も「アプリシェルはキャッシュ優先・APIは常にネットワーク」の
 // 2パターンだけで十分なため、依存を増やすメリットが薄い）。
-const CACHE = "challenges-shell-v3";
+const CACHE = "challenges-shell-v4";
 const SHELL = ["/", "/style.css", "/app.js", "/manifest.webmanifest"];
 
 self.addEventListener("install", (event) => {

@@ -49,9 +49,16 @@
   -webkit-tap-highlight-color: transparent;
 }
 
+/* 背景は html にも塗り、ホームインジケーター周りやバウンス時に白い余白が出ないようにする */
+html {
+  min-height: 100%;
+  background: #f9d3bd var(--bg-gradient) no-repeat fixed;
+}
+
 html,
 body {
   height: 100%;
+  min-height: 100dvh;
 }
 
 /* 背景：ピーチ・アプリコット・コーラルの光がゆっくり漂う。
@@ -215,32 +222,40 @@ button,
   gap: 10px;
 }
 
-.brand-row {
+/* 入力欄とアバターを1行に（タイトルは置かず、開いた瞬間に入力欄が主役になる） */
+.capture-row {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  gap: 10px;
 }
 
-.brand {
-  font-size: 20px;
-  font-weight: 700;
-  letter-spacing: -0.02em;
+.capture-row .capture-form {
+  flex: 1;
+  min-width: 0;
 }
 
 .avatar-btn {
-  width: 34px;
-  height: 34px;
+  flex: none;
+  width: 44px;
+  height: 44px;
+  padding: 0; /* Safari のボタン既定の内側余白で画像が縮むのを防ぐ */
+  border: none;
   border-radius: 50%;
   overflow: hidden;
-  box-shadow: var(--shadow-1);
-  border: 1px solid var(--glass-border);
+  box-shadow: var(--shadow-2);
 }
 
-.avatar-btn img {
+.avatar-btn img,
+.avatar-fallback {
   width: 100%;
   height: 100%;
   object-fit: cover;
   display: block;
+  border-radius: 50%;
+}
+
+.avatar-fallback {
+  background: linear-gradient(145deg, #f7b98a, #ec7f3c);
 }
 
 .capture-form {
@@ -1231,24 +1246,6 @@ button,
 }
 
 /* ---------- 参考デザイン（暖色クリーム × 大きな角丸）に合わせた仕上げ ---------- */
-.brand {
-  font-size: 24px;
-  font-weight: 800;
-  letter-spacing: -0.02em;
-  color: var(--on-bg);
-}
-
-.empty-state {
-  color: var(--text-3);
-}
-
-.avatar-btn {
-  width: 40px;
-  height: 40px;
-  border: 2px solid rgba(255, 255, 255, 0.9);
-  box-shadow: var(--shadow-2);
-}
-
 /* カードはクリーム白から右下へうっすら杏色に色づく */
 .card.glass {
   background: linear-gradient(115deg, rgba(255, 252, 248, 0.86) 0%, rgba(255, 246, 236, 0.8) 55%, rgba(252, 232, 208, 0.74) 100%);

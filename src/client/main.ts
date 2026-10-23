@@ -114,12 +114,7 @@ function showShell(avatarUrl: string | null, _name: string | null) {
   app.setAttribute("aria-hidden", "false");
   app.innerHTML = `
     <div class="topbar">
-      <div class="brand-row">
-        <div class="brand">Challenges</div>
-        <button class="avatar-btn" id="avatar-btn" aria-label="ログアウト">
-          ${avatarUrl ? `<img src="${avatarUrl}" alt="" />` : `<div style="width:100%;height:100%;background:#d8dae0"></div>`}
-        </button>
-      </div>
+      <div class="capture-row">
       <form class="capture-form glass-strong" id="capture-form">
         <textarea
           id="capture-input"
@@ -137,6 +132,10 @@ function showShell(avatarUrl: string | null, _name: string | null) {
           </button>
         </div>
       </form>
+        <button class="avatar-btn" id="avatar-btn" aria-label="ログアウト">
+          ${avatarUrl ? `<img src="${avatarUrl}" alt="" referrerpolicy="no-referrer" />` : `<span class="avatar-fallback"></span>`}
+        </button>
+      </div>
       <div class="segmented glass" id="segmented">
         <div class="thumb"></div>
         ${FILTERS.map(
@@ -171,7 +170,7 @@ function showShell(avatarUrl: string | null, _name: string | null) {
 
   requestAnimationFrame(() => requestAnimationFrame(hideBootSkeleton));
   // スケルトンが溶けるのに合わせて、ヘッダー要素を上から順に浮かび上がらせる
-  [".brand", "#avatar-btn", "#capture-form", "#segmented"].forEach((sel, i) => {
+  ["#capture-form", "#avatar-btn", "#segmented"].forEach((sel, i) => {
     play(
       app.querySelector(sel),
       [
