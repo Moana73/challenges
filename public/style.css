@@ -14,8 +14,8 @@
   /* 背景は赤のグラデーション（カード類は白いすりガラスのまま） */
   --bg-gradient: linear-gradient(165deg, #ff6a5c 0%, #f0353f 42%, #c8102e 78%, #9e0b26 100%);
   --on-bg: #fff;
-  --glass: rgba(255, 255, 255, 0.6);
-  --glass-strong: rgba(255, 255, 255, 0.78);
+  --glass: rgba(255, 255, 255, 0.84);
+  --glass-strong: rgba(255, 255, 255, 0.9);
   --glass-border: rgba(255, 255, 255, 0.9);
   --hairline: rgba(60, 60, 67, 0.1);
   --text: #1c1c1e;

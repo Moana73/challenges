@@ -39,8 +39,13 @@ export function attachDrag(el: HTMLElement, handlers: DragHandlers): () => void 
       const cross = handlers.axis === "x" ? Math.abs(dy) : Math.abs(dx);
       if (primary < 8 || primary < cross) return;
       dragging = true;
-      el.setPointerCapture(pointerId);
       handlers.onStart?.();
+      // キャプチャに失敗しても（ポインタが既に離れた等）ドラッグ自体は続行する
+      try {
+        el.setPointerCapture(pointerId);
+      } catch {
+        /* noop */
+      }
     }
     e.preventDefault();
     lastX = e.clientX;
