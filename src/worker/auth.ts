@@ -78,8 +78,9 @@ export async function handleAuth(req: Request, env: Env, url: URL): Promise<Resp
       headers: { "content-type": "application/x-www-form-urlencoded" },
       body: new URLSearchParams({
         code,
-        client_id: env.GOOGLE_CLIENT_ID,
-        client_secret: env.GOOGLE_CLIENT_SECRET,
+        client_id: env.GOOGLE_CLIENT_ID.trim(),
+        // ダッシュボードへの貼り付け時に混入しがちな前後の空白・改行を除去
+        client_secret: env.GOOGLE_CLIENT_SECRET.trim(),
         redirect_uri: `${url.origin}/auth/callback`,
         grant_type: "authorization_code",
       }),
