@@ -124,7 +124,14 @@ class Store {
       if (c.dirty) await this.push(c);
     }
     const { challenges: remote } = await api.list();
-    const localById = new Map(this.challenges.map((c) => [c.id, c]));
+    const remoteIds = new Set(remote.map((r) => r.id));
+    // 未送信の変更がないのにサーバーに存在しない＝他所で削除済み。ローカルからも消す（残すと削除したものが復活して見える）
+    for (const c of this.challenges) {
+      if (!c.dirty && !remoteIds.has(c.id)) void idbDelete(c.id);
+    }
+    const localById = new Map(
+      this.challenges.filter((c) => c.dirty || remoteIds.has(c.id)).map((c) => [c.id, c]),
+    );
     for (const r of remote) {
       const local = localById.get(r.id);
       if (!local || (!local.dirty && r.updatedAt > local.updatedAt)) {
