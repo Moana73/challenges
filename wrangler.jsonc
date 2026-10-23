@@ -7,8 +7,14 @@
   "assets": {
     "directory": "./public",
     "binding": "ASSETS",
-    "not_found_handling": "single-page-application"
+    "not_found_handling": "single-page-application",
+    // SPAモードでは画面遷移（navigate）リクエストがWorkerより先にindex.htmlで返されるため、
+    // 認証とAPIは必ずWorkerを通す（これが無いと /auth/google がログイン画面を返すだけになる）
+    "run_worker_first": ["/auth/*", "/api/*"]
   },
+  // GOOGLE_CLIENT_ID / ALLOWED_EMAILS はダッシュボードで設定（Publicリポジトリのため）。
+  // Git連携デプロイでそれらが消えないよう保持する
+  "keep_vars": true,
   "d1_databases": [
     {
       "binding": "DB",
