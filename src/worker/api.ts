@@ -105,7 +105,11 @@ async function putChallenge(req: Request, env: Env, user: User, id: string): Pro
      ON CONFLICT(id) DO UPDATE SET
        title = excluded.title, note = excluded.note, status = excluded.status,
        position = excluded.position, updated_at = excluded.updated_at, deleted_at = NULL
-     WHERE challenges.user_id = excluded.user_id AND excluded.updated_at >= challenges.updated_at`,
+     WHERE challenges.user_id = excluded.user_id AND (
+       excluded.updated_at > challenges.updated_at OR
+       -- 同時刻の更新は許可するが、削除済みの行を同時刻の古い更新で復活させない
+       (excluded.updated_at = challenges.updated_at AND challenges.deleted_at IS NULL)
+     )`,
   )
     .bind(id, user.id, title, note, status, position, body.createdAt, body.updatedAt)
     .run();

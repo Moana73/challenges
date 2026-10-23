@@ -8,6 +8,7 @@ class Store {
   challenges: Challenge[] = [];
   loaded = false;
   private listeners = new Set<Listener>();
+  private deletedAt = new Map<string, number>();
 
   subscribe(fn: Listener): () => void {
     this.listeners.add(fn);
@@ -78,7 +79,9 @@ class Store {
 
   /** 削除の取り消し：同じ内容で再度 upsert する（Undoトースト用） */
   restore(c: Challenge) {
-    const restored: Challenge = { ...c, updatedAt: Date.now(), dirty: true };
+    // 削除リクエストより必ず新しい時刻にする（同じミリ秒だとサーバー側で削除が優先される）
+    const deletedAt = this.deletedAt.get(c.id) ?? 0;
+    const restored: Challenge = { ...c, updatedAt: Math.max(Date.now(), deletedAt + 1), dirty: true };
     this.challenges.unshift(restored);
     this.sortInPlace();
     this.emit();
@@ -91,6 +94,7 @@ class Store {
     this.challenges.splice(i, 1);
     this.emit();
     const ts = Date.now();
+    this.deletedAt.set(id, ts);
     void idbDelete(id);
     void api.remove(id, ts).catch(() => {
       /* オフライン等で失敗しても、起動時の再同期では取り上げない（削除は再送しない設計） */
@@ -106,7 +110,8 @@ class Store {
     try {
       await api.put(c);
       c.dirty = false;
-      void idbPut(c);
+      // 送信中に削除された場合はローカルDBへ書き戻さない（書き戻すと次回起動時に復活する）
+      if (this.challenges.includes(c)) void idbPut(c);
     } catch (e) {
       if (e instanceof AuthRequiredError) throw e;
       // オフライン・一時的なエラー：dirty のままにして later flush に任せる

@@ -508,7 +508,11 @@ function closeSheet() {
     if (openSheetId) store.update(openSheetId, { note: noteField.value });
   }
   const titleField = document.getElementById("sheet-title") as HTMLTextAreaElement;
-  if (openSheetId) store.update(openSheetId, { title: titleField.value.trim() || "無題" });
+  if (openSheetId) {
+    // 変更がないのに保存すると updatedAt が進み、直後の削除と競合して復活する原因になるため、差分があるときだけ保存
+    const title = titleField.value.trim() || "無題";
+    if (store.byId(openSheetId)?.title !== title) store.update(openSheetId, { title });
+  }
   openSheetId = null;
   document.getElementById("sheet-backdrop")!.classList.remove("open");
   document.getElementById("sheet")!.classList.remove("open");
