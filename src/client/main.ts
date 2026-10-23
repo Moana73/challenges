@@ -1,15 +1,15 @@
 import { api, AuthRequiredError } from "./api";
 import { attachDrag } from "./gestures";
-import { GOOGLE_G_DATA_URI, ICON_EMPTY, ICON_FLAG, ICON_SEND, ICON_SPARKLE } from "./icons";
+import { GOOGLE_G_DATA_URI, ICON_EMPTY, ICON_FLAME, ICON_SEND, ICON_SPARKLE } from "./icons";
 import { burst, EASE_IN, EASE_OUT, flip, installRipples, measure, play, pulseRing, reduced, SPRING, typeInto } from "./motion";
 import { store } from "./state";
 import type { Challenge, ChallengeStatus } from "./types";
 import { STATUS_LABEL } from "./types";
 
 const STATUS_COLOR: Record<ChallengeStatus, string> = {
-  idea: "#8e8e93",
-  doing: "#ff9500",
-  done: "#30b350",
+  idea: "#a89b91",
+  doing: "#ec7f3c",
+  done: "#4cae6e",
 };
 
 type Filter = "all" | ChallengeStatus;
@@ -70,7 +70,7 @@ function showLogin(errorCode?: string | null) {
   app.innerHTML = `
     <div class="login-screen">
       <div class="login-card glass-strong">
-        <div class="login-mark rise" style="--d:120ms">${ICON_FLAG}</div>
+        <div class="login-mark rise" style="--d:120ms">${ICON_FLAME}</div>
         <h1 class="rise" style="--d:200ms">Challenges</h1>
         <p class="rise" style="--d:260ms">Googleアカウントでログインしてください</p>
         <a class="google-btn rise" style="--d:340ms" href="/auth/google" id="google-btn">
@@ -599,9 +599,6 @@ function updateCard(wrap: HTMLElement, c: Challenge) {
   const notePreview = wrap.querySelector(".card-note-preview") as HTMLElement;
   notePreview.textContent = c.note ? c.note.split("\n")[0] ?? "" : "";
   notePreview.style.display = c.note ? "" : "none";
-  const dot = wrap.querySelector(".card-status-dot") as HTMLElement;
-  dot.style.background = STATUS_COLOR[c.status];
-  dot.style.setProperty("--dot-bg", `${STATUS_COLOR[c.status]}22`);
   const chip = wrap.querySelector(".status-chip") as HTMLElement;
   chip.textContent = STATUS_LABEL[c.status];
   chip.className = `status-chip ${c.status}`;
