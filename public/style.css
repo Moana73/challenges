@@ -11,12 +11,14 @@
 
 :root {
   color-scheme: light;
-  --bg: #fbf1e8;
-  --bg-top: #fdf8f3;
-  --bg-gradient: linear-gradient(180deg, #fdf6ef 0%, #fcefe4 38%, #fbe2cf 72%, #f9d3bd 100%);
+  --bg: #fffbf5;
+  --bg-top: #fffdf9;
+  --bg-gradient: #fffbf5;
   --on-bg: #2a1d16;
-  --glass: rgba(255, 251, 246, 0.72);
-  --glass-strong: rgba(255, 252, 248, 0.86);
+  --glass: linear-gradient(160deg, rgba(255, 255, 255, 0.78), rgba(255, 255, 255, 0.5));
+  --glass-strong: linear-gradient(160deg, rgba(255, 255, 255, 0.88), rgba(255, 255, 255, 0.66));
+  --glass-shadow: inset 0 1px 0.5px rgba(255, 255, 255, 0.95), inset 0 -1px 1px rgba(255, 255, 255, 0.35),
+    0 10px 30px -12px rgba(170, 90, 20, 0.22), 0 2px 6px -2px rgba(170, 90, 20, 0.08);
   --glass-border: rgba(255, 255, 255, 0.85);
   --hairline: rgba(120, 80, 50, 0.12);
   --text: #2a1d16;
@@ -52,7 +54,7 @@
 /* 背景は html にも塗り、ホームインジケーター周りやバウンス時に白い余白が出ないようにする */
 html {
   min-height: 100%;
-  background: #f9d3bd var(--bg-gradient) no-repeat fixed;
+  background: var(--bg);
 }
 
 html,
@@ -61,32 +63,65 @@ body {
   min-height: 100dvh;
 }
 
-/* 背景：ピーチ・アプリコット・コーラルの光がゆっくり漂う。
-   すりガラス越しにこの色がにじむことで「Liquid Glass」らしい奥行きが出る */
-body::before {
-  content: "";
+/* 背景：tasks と同じ構成（ほぼ白の地に、大きくぼかした光の玉がゆっくり漂う）。
+   色はオレンジ・黄色・アプリコット。すりガラス越しに色がにじんで奥行きが出る */
+.bg {
   position: fixed;
-  inset: -20%;
-  z-index: -1;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
   pointer-events: none;
-  background:
-    radial-gradient(30% 26% at 12% 18%, rgba(245, 160, 100, 0.55), transparent 70%),
-    radial-gradient(32% 26% at 92% 52%, rgba(248, 200, 110, 0.5), transparent 70%),
-    radial-gradient(36% 30% at 20% 78%, rgba(240, 130, 110, 0.42), transparent 70%),
-    radial-gradient(40% 30% at 75% 95%, rgba(246, 170, 130, 0.5), transparent 70%);
-  filter: blur(28px);
-  animation: aurora 26s ease-in-out infinite alternate;
+  background: var(--bg);
 }
 
-@keyframes aurora {
-  0% {
-    transform: translate3d(0, 0, 0) rotate(0deg) scale(1);
+.blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(48px);
+  opacity: 0.95;
+  will-change: transform;
+}
+
+.b1 {
+  width: 70vmax;
+  height: 70vmax;
+  left: -25vmax;
+  top: -30vmax;
+  background: radial-gradient(circle, #ffb46b 0%, rgba(255, 180, 107, 0.35) 40%, transparent 68%);
+  animation: drift1 26s ease-in-out infinite alternate;
+}
+
+.b2 {
+  width: 60vmax;
+  height: 60vmax;
+  right: -25vmax;
+  top: 20vh;
+  background: radial-gradient(circle, #ffe07a 0%, rgba(255, 224, 122, 0.38) 40%, transparent 68%);
+  animation: drift2 32s ease-in-out infinite alternate;
+}
+
+.b3 {
+  width: 55vmax;
+  height: 55vmax;
+  left: -10vmax;
+  bottom: -30vmax;
+  background: radial-gradient(circle, #ffc29a 0%, rgba(255, 194, 154, 0.35) 40%, transparent 68%);
+  animation: drift3 29s ease-in-out infinite alternate;
+}
+
+@keyframes drift1 {
+  to {
+    transform: translate(12vmax, 10vmax) scale(1.08);
   }
-  50% {
-    transform: translate3d(4%, -3%, 0) rotate(8deg) scale(1.08);
+}
+@keyframes drift2 {
+  to {
+    transform: translate(-14vmax, 8vmax) scale(0.94);
   }
-  100% {
-    transform: translate3d(-4%, 3%, 0) rotate(-6deg) scale(1.02);
+}
+@keyframes drift3 {
+  to {
+    transform: translate(10vmax, -12vmax) scale(1.1);
   }
 }
 
@@ -110,6 +145,7 @@ textarea {
 #app {
   position: fixed;
   inset: 0;
+  z-index: 1;
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -200,6 +236,7 @@ button,
 /* ---------- ガラス共通 ---------- */
 .glass {
   background: var(--glass);
+  box-shadow: var(--glass-shadow);
   backdrop-filter: blur(24px) saturate(180%);
   -webkit-backdrop-filter: blur(24px) saturate(180%);
   border: 1px solid var(--glass-border);
@@ -207,6 +244,7 @@ button,
 
 .glass-strong {
   background: var(--glass-strong);
+  box-shadow: var(--glass-shadow);
   backdrop-filter: blur(30px) saturate(190%);
   -webkit-backdrop-filter: blur(30px) saturate(190%);
   border: 1px solid var(--glass-border);
@@ -686,7 +724,7 @@ button,
   z-index: 50;
   display: flex;
   flex-direction: column;
-  background: var(--bg-gradient);
+  background: transparent;
   padding: calc(var(--safe-t) + 14px) 16px 16px;
   gap: 14px;
   transition:
@@ -1240,16 +1278,14 @@ button,
     animation-iteration-count: 1 !important;
     transition-duration: 0.001ms !important;
   }
-  body::before {
+  .blob {
     animation: none !important;
   }
 }
 
 /* ---------- 参考デザイン（暖色クリーム × 大きな角丸）に合わせた仕上げ ---------- */
-/* カードはクリーム白から右下へうっすら杏色に色づく */
 .card.glass {
-  background: linear-gradient(115deg, rgba(255, 252, 248, 0.86) 0%, rgba(255, 246, 236, 0.8) 55%, rgba(252, 232, 208, 0.74) 100%);
-  border: 1px solid rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.7);
 }
 
 .card {
@@ -1346,5 +1382,5 @@ button,
 
 /* スケルトンも暖色に */
 .sk {
-  background: rgba(255, 250, 244, 0.7);
+  background: rgba(255, 255, 255, 0.6);
 }
