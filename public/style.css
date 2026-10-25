@@ -1364,8 +1364,23 @@ button,
   height: 44px;
 }
 
+/* 送信ボタンは tasks と同じくグラデーション＋上辺のハイライト */
 .icon-btn.primary {
-  box-shadow: 0 6px 16px -4px rgba(232, 116, 59, 0.55);
+  background: linear-gradient(145deg, #ffa046, #f26b1d);
+  box-shadow:
+    0 6px 16px -6px rgba(242, 107, 29, 0.75),
+    inset 0 1px 0 rgba(255, 255, 255, 0.45);
+}
+
+.icon-btn.primary[disabled] {
+  background: linear-gradient(145deg, #e6dcd3, #d6cabe);
+  box-shadow: none;
+}
+
+/* AIボタンは淡いオレンジの丸 */
+#ai-split-btn {
+  color: #f08a24;
+  background: rgba(255, 160, 70, 0.14);
 }
 
 .segmented button.active .count {
@@ -1373,11 +1388,22 @@ button,
 }
 
 /* 入力中は杏色の柔らかい光をまとう */
+/* tasks と同じく、入力欄の周りにアクセント色（オレンジ）の輪と柔らかい光をまとわせる。
+   開いた瞬間に自動フォーカスされるので、起動直後からこの枠が見える */
+.capture-form {
+  border: 1.5px solid rgba(255, 150, 60, 0.35);
+}
+
 .capture-form:focus-within {
+  border-color: rgba(255, 140, 40, 0.75);
   box-shadow:
-    0 0 0 4px rgba(236, 127, 60, 0.14),
-    0 18px 40px -12px rgba(232, 116, 59, 0.38),
-    var(--shadow-1);
+    var(--glass-shadow),
+    0 0 0 4px rgba(255, 140, 40, 0.18),
+    0 14px 40px -14px rgba(255, 120, 30, 0.5);
+}
+
+.capture-form textarea {
+  caret-color: var(--accent);
 }
 
 /* スケルトンも暖色に */
